@@ -1,16 +1,25 @@
 # Direct Video Resize for ComfyUI
 
-**Give your render its delivery resolution.** Connect a native `VIDEO` to the node, enter a width and height, then send the resized video to `Save Video`.
+**Resize an existing video to a specific width and height in ComfyUI.** The node accepts and returns native `VIDEO`. It uses model-free pixel resampling to shrink or enlarge the picture, with CUDA Lanczos and NVENC on the NVIDIA path. Enlargement interpolates the existing pixels. Any AI super-resolution in the workflow happens upstream.
 
 [简体中文](README.zh-CN.md) · [Benchmark and test method](docs/BENCHMARKS.md) · [Example workflow](workflows/resize-saved-video.json)
 
 ![Two input paths through Direct Video Resize: saved files use NVDEC and FFmpeg CUDA scaling; Create Video frames use a one-frame CUDA Lanczos buffer. Both use NVENC P5 and return VIDEO.](docs/pipeline.svg)
 
-### Why use it?
-+- **Deliver a high-resolution render at 1080p.** Put this node after `Create Video` in an H3, VAE decode, or video super-resolution workflow. It reads the existing frames, downsizes each frame with antialiased CUDA Lanczos, and sends the result to the H.264 encoder. The first video encode happens at the delivery resolution.
+### Why I built it
+
+I built this after using [RelayVSR 4×](https://github.com/kopperx/RelayVSR) as a second pass. Some clips came out around **5,500 pixels wide**. At that size, certain textures still looked soft or smeared, and some generated texture looked less convincing up close. At **2560×1440** or **1920×1080**, those artifacts were less noticeable in the shots I reviewed, and the important lines still read clearly. I wanted to deliver at that size from ComfyUI without exporting the oversized clip just to resize it in another app.
+
+The resize options I tried were slow on these inputs or built another full batch of frames. This node processes the frames one at a time and encodes them at the delivery size. It works with RelayVSR output, other generated videos, and ordinary video files.
+
+`RelayVSR 4× → VSR Decode → Create Video (codec=none) → Direct Video Resize → Save Video`
+
+### What it does
+
+- **Resample existing frames before encoding.** Put the node after `Create Video` to resize each frame with antialiased CUDA Lanczos and send it to the H.264 encoder. The first video encode happens at the requested size.
 - **Resize a saved clip without building an image batch.** For compatible, same-aspect-ratio files, FFmpeg uses NVDEC, `scale_cuda` with Lanczos, and NVENC. The node copies compatible audio streams and passes the source frame timing through.
 - **Keep working memory tied to frame size.** The frame input path reuses its CUDA buffers and produces one packed RGB frame at a time. A full upstream frame batch can still be resident. The node avoids creating a second full video batch during resizing.
-- **Keep fine lines in the downscale.** Both NVIDIA paths use Lanczos and the NVENC P5 preset. In a same-input filter check, the CUDA tensor resizer tracked FFmpeg's software Lanczos reference much more closely than bilinear interpolation. [See the measurements](docs/BENCHMARKS.md#resampling-check).
+- **Preserve linework and texture during resizing.** Both NVIDIA paths use Lanczos and the NVENC P5 preset. In a same-input filter check, the CUDA tensor resizer tracked FFmpeg's software Lanczos reference more closely than bilinear interpolation. [See the measurements](docs/BENCHMARKS.md#resampling-check).
 
 ### Quick start
 
@@ -29,7 +38,7 @@ For a portable install, use its `python_embeded/python.exe` in place of `python`
 | Frames from VAE decode or VSR | `Create Video` (`codec=none`) → **`Video Resize`** → `Save Video` |
 | A saver that returns a filename | Connect its path output to **`CUDA 视频缩放（文件直连）`** (`DirectVideoResizePath`) → `Save Video` |
 
-Start with `1920 × 1080`, `NVIDIA NVENC`, and `quality=18`. Try `14` for finer detail at a higher bitrate. The node center-crops to match the requested aspect ratio, then scales to the exact even dimensions. Set `Save Video` format and codec to **auto** so a compatible MP4 can be saved without another video encode.
+For 16:9 delivery, try `1920 × 1080` or `2560 × 1440`, select `NVIDIA NVENC`, and start with `quality=18`. Set `14` for lighter compression at a typically higher bitrate. The node center-crops to match the requested aspect ratio, then scales to the exact even dimensions. Set `Save Video` format and codec to **auto** so a compatible MP4 can be saved without another video encode.
 
 ### Requirements and supported inputs
 
@@ -55,6 +64,6 @@ Start with `1920 × 1080`, `NVIDIA NVENC`, and `quality=18`. Try `14` for finer 
 
 ### Performance
 
-On an **RTX 5090**, resizing **5504×3096 → 1920×1080** took **1.00 s** from a saved file and **3.04 s** from CPU-resident float32 frames, measured on a 240-frame synthetic fixture. On the same frame input, the old route that encoded intermediate videos took **31.77 s**, compared with **3.03 s** in the paired current run. Times cover resizing and encoding. [Results and reproduction steps](docs/BENCHMARKS.md)
+On an **RTX 5090**, resizing **5504×3096 → 1920×1080** took **1.00 s** from a saved file and **3.04 s** from CPU-resident float32 frames, measured on a 240-frame synthetic fixture. In a paired test using the same input frames and final encoder settings, the original route with intermediate encodes took **31.77 s** and this CUDA route took **3.03 s**, about **10.5× faster**. Times cover resizing and encoding. [Results and reproduction steps](docs/BENCHMARKS.md)
 
 MIT licensed. See [LICENSE](LICENSE).

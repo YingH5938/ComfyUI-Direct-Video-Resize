@@ -28,6 +28,7 @@ The benchmark feeds the same 5504×3096 RGB frame to the CUDA Lanczos filter and
 - Both GPU paths delivered the expected dimensions, frame count and frame rate with audio present. The test checks that the file route copies the original AAC packets unchanged.
 - Saving the file result with ComfyUI's `auto` format and codec took **0.040 s**. Audio and video packet hashes matched the resized file, which confirms the streams were remuxed in this test.
 - The package was also loaded in an isolated ComfyUI. The example file graph and a `Create Video (codec=none)` graph both ran through `Save Video`.
+- Additional size checks on the same RTX 5090 verified a saved file downscale from **5504×3096 to 2560×1440** (240 frames, audio present) and an in-memory interpolation upscale from **640×360 to 1280×720** (12 frames, silent input).
 - The tested profile is ordinary SDR delivery. HDR and uncommon codecs or color formats need separate validation.
 
 ### Test environment and reproduction

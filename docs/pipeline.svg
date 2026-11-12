@@ -14,7 +14,7 @@
   <path d="M38 50h36m-36 0v36m12-24v24m0-24h24" fill="none" stroke="#64e4bc" stroke-width="4" stroke-linecap="round"/>
   <g font-family="Segoe UI, Arial, sans-serif">
     <text x="94" y="72" fill="#f0f7fb" font-size="32" font-weight="700">Direct Video Resize</text>
-    <text x="42" y="113" fill="#aabed0" font-size="18">Native VIDEO in and out · Resize to exact delivery dimensions</text>
+    <text x="42" y="113" fill="#aabed0" font-size="18">Upscale or downscale existing video · Pixel resampling · Native VIDEO in and out</text>
     <g fill="#172a3c" stroke="#30495e">
       <rect x="42" y="146" width="205" height="64" rx="10"/>
       <rect x="42" y="226" width="205" height="64" rx="10"/>
