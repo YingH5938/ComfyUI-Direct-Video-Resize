@@ -1,0 +1,61 @@
+{
+  "environment": {
+    "os": "Windows",
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "comfyui": "0.44.0",
+    "python": "3.13.11",
+    "torch": "2.10.0+cu130",
+    "triton": "3.6.0",
+    "ffmpeg": "7.1-essentials_build-www.gyan.dev",
+    "pyav": "18.1.0",
+    "imageio_ffmpeg": "0.6.0"
+  },
+  "source_wh": [
+    5504,
+    3096
+  ],
+  "target_wh": [
+    1920,
+    1080
+  ],
+  "frames": 240,
+  "fps": 24,
+  "quality": 14,
+  "file": {
+    "runs_seconds": [
+      1.022,
+      0.996,
+      0.994
+    ],
+    "median_seconds": 0.996,
+    "peak_additional_pytorch_mib": 0.0
+  },
+  "checks": {
+    "dimensions_frame_count_fps_audio": true,
+    "file_audio_packets_unchanged": true,
+    "save_video_auto_packets_unchanged": true,
+    "save_video_auto_seconds": 0.04,
+    "no_intermediate_video_from_components": true
+  },
+  "filter_comparison": {
+    "reference": "FFmpeg swscale Lanczos, raw RGB before encoding",
+    "rgb_levels": "0-255",
+    "cuda_lanczos_rmse": 0.1044,
+    "cuda_bilinear_rmse": 0.615
+  },
+  "cpu_resident_frames": {
+    "runs_seconds": [
+      3.037,
+      3.046,
+      3.032
+    ],
+    "median_seconds": 3.037,
+    "peak_additional_pytorch_mib": 270.2
+  },
+  "legacy_comparison": {
+    "frames": 240,
+    "legacy_seconds": 31.77,
+    "current_seconds": 3.025,
+    "legacy_average_fps": 24.10022
+  }
+}

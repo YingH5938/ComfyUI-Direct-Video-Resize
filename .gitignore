@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*.bak
+*.mp4
+*.mkv
+*.wav
+benchmark-results.json
+benchmark-work/

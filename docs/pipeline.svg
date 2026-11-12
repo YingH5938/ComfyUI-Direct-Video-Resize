@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
+  <title id="title">Direct Video Resize</title>
+  <desc id="desc">A saved video is decoded with NVDEC and scaled with FFmpeg CUDA. Create Video frames are processed one at a time with CUDA Lanczos. Both routes encode with NVENC P5 and return a native VIDEO.</desc>
+  <defs>
+    <linearGradient id="panel" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#101e2e"/>
+      <stop offset="1" stop-color="#111724"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0l9 5-9 5z" fill="#8299ac"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="340" rx="24" fill="url(#panel)"/>
+  <path d="M38 50h36m-36 0v36m12-24v24m0-24h24" fill="none" stroke="#64e4bc" stroke-width="4" stroke-linecap="round"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="94" y="72" fill="#f0f7fb" font-size="32" font-weight="700">Direct Video Resize</text>
+    <text x="42" y="113" fill="#aabed0" font-size="18">Native VIDEO in and out · Resize to exact delivery dimensions</text>
+    <g fill="#172a3c" stroke="#30495e">
+      <rect x="42" y="146" width="205" height="64" rx="10"/>
+      <rect x="42" y="226" width="205" height="64" rx="10"/>
+      <rect x="284" y="146" width="470" height="64" rx="10"/>
+      <rect x="284" y="226" width="470" height="64" rx="10"/>
+      <rect x="792" y="146" width="164" height="144" rx="10"/>
+      <rect x="995" y="146" width="165" height="144" rx="10"/>
+    </g>
+    <g fill="#f0f7fb" font-size="19" font-weight="600">
+      <text x="59" y="184">Saved video</text>
+      <text x="59" y="264">Create Video frames</text>
+      <text x="302" y="184">NVDEC → FFmpeg CUDA Lanczos</text>
+      <text x="302" y="264">CUDA Lanczos · One frame at a time</text>
+      <text x="874" y="214" text-anchor="middle">NVENC P5</text>
+      <text x="1077" y="214" text-anchor="middle">Save Video</text>
+    </g>
+    <g fill="#64e4bc" font-size="15">
+      <text x="874" y="241" text-anchor="middle">H.264 / MP4</text>
+      <text x="1077" y="241" text-anchor="middle">Native VIDEO</text>
+    </g>
+  </g>
+  <g stroke="#8299ac" stroke-width="2" marker-end="url(#arrow)">
+    <path d="M252 178h24M252 258h24M760 178h24M760 258h24M961 218h26"/>
+  </g>
+</svg>
